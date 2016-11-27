@@ -14,8 +14,7 @@
     <header>
       <section id="menu" ng-click="apiCtrl.toggleMenu()">
         <img src="img/menu_icon.png">
-      </section>
-      
+      </section>      
       <nav>
         <ul>
           <li class="logo">
@@ -44,19 +43,13 @@
         <button id="search_button" value="search" ng-click="">Search Store</button>
       </form>
     </section>
-    
-    <section class="media_list">
-      <ul id="msg"></ul>
-    </section>
 
 <!-- Videos -->
     <section class="media_list">
       <h1 class="title">Videos</h1>
-      <ul id="video">
-        <div lib-tmpl='loader' lib-local='loader'>
-          <img lib-if='loading' lib-src='img/loading_icon.gif'>
-        </div>
-        <li lib-tmpl='videos' lib-rsrc='videos'>
+      <ul id="video" lib-tmpl='videos' lib-rsrc='videos'>
+        <img lib-rsrc-loading lib-src='img/loading_icon.gif'>
+        <li lib-iter-self>
           <iframe lib-src="https://player.vimeo.com/video/[[videoId]]"
            width='180' height='180' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
           <p title="[[name]]">[[nameTrunc]]</p>

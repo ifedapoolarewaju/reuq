@@ -21,14 +21,29 @@ function Reuq(controller) {
       return template;
     }
 
-    var template = this.templates[templateName].html;
+    var templateObj = this.templates[templateName];
+    var resourceName = templateObj.resourceName;
+    var template = templateObj.html;
     var $template = $(template);
 
+    // process lib-rsrc-loading
+    if (resourceName && this.controller.resources[resourceName].loading) {
+      $template.not('[lib-rsrc-loading], [lib-rsrc-loading] *').remove();
+    } else {
+      $template.find('[lib-rsrc-loading], [lib-rsrc-loading] *').remove();
+    }
+
     //process iteration
-    $template.find('[lib-iter]').each(function(id, el) {
+    $template.find('[lib-iter], [lib-iter-self]').each(function(id, el) {
       var $el = $(el);
-      var listKey = $el.attr('lib-iter');
-      var list = data[listKey] || [];
+
+      if ($el.is("[lib-iter]")) {
+        var listKey = $el.attr('lib-iter');
+        var list = data[listKey] || [];
+      } else {
+        // then it's lib-iter-self
+        var list = data || [];
+      }
       list.forEach(function(listItem) {
         var $compiled = $(compile($el.prop('outerHTML'), listItem));
         $compiled.removeAttr('lib-iter');
@@ -90,11 +105,7 @@ function Reuq(controller) {
   //renderData
   //TODO automatically subscribe templates to resource changes
   this.renderData = function(templateName, data) {
-    if (Array.isArray(data)) {
-      this.renderEach(templateName, data);
-    } else {
-      this.render(templateName, data);
-    }
+    this.render(templateName, data);
   }
 
   this.cacheIsValid = function(resourceName) {
@@ -124,6 +135,8 @@ function Reuq(controller) {
     if (resource.data && !force && this.cacheIsValid(resourceName)) {
       cb(resource.data);
     } else {
+      resource.loading = true;
+
       var url = typeof resource.url === 'function' ? resource.url(this) : resource.url;
       $.ajax({
         url: url,
@@ -133,7 +146,10 @@ function Reuq(controller) {
           })
         },
         success: function(resp) {
-          this_.setResource(resourceName, resp[resource.dataKey]);
+          resource.loading = false;
+          resource.loaded = true;
+
+          this_.setResource(resourceName, resource.dataKey ? resp[resource.dataKey] : resp);
 
           if (typeof cb === 'function') {
             cb(resource.data);
@@ -277,6 +293,7 @@ function Reuq(controller) {
       // if autoload is not set, autoload it by default
       if (resources[resourceName]['autoload'] === undefined || resources[resourceName]['autoload']) {
         self.getResource(resourceName, true);
+        self.render(resourceName, null);
       }
     });
 
