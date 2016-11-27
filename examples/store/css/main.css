@@ -1,0 +1,439 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+
+/********************************
+reset section
+*********************************/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/***************************************
+custom css
+***************************************/
+
+
+/**************************************
+selections by html elements
+*************************************/
+
+body{
+	font-family: arial;
+	font-size: 0.8em;
+}
+
+
+
+nav{	
+	text-align: right;
+	display: block;
+	margin-right: 100px;
+	margin-left: 100px;
+	margin-top: 15px;
+	padding-bottom: 25px;
+	border-bottom: 4px solid #a9de3b;
+}
+
+nav li{
+	display: inline-block;
+	padding: 0 0.5%;
+	clear: both;
+}
+
+
+nav li[class="logo"]{
+	float: left;
+}
+
+footer{
+	display: block;
+	background: #89ce1b;
+	position: relative;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding-top: 5px;
+	text-align: center
+}
+
+
+footer li{
+	display: inline-block;
+	padding: 1% 1%;
+}
+
+
+footer a{
+	text-decoration: none;
+	color: #666
+}
+
+
+/***************************************
+selections by class
+****************************************/
+.link{
+		width: 0px; 
+		color:#444;
+		font-weight: bold;
+		font-family: cursive, 'Righteous';
+		font-size: 0em;
+	}
+
+@-webkit-keyframes showFont {
+    from {font-size:0;
+	width: 0;
+	padding-top:0;
+	padding-bottom: 0;}
+
+    to {font-size:1em;
+	width: 35px;
+	padding-top:10px;
+	padding-bottom: 10px;}
+}
+
+
+@-webkit-keyframes removeFont {
+    from {font-size:1em;
+	width: 35px;
+	padding-top:10px;
+	padding-bottom: 10px;}
+
+	to {font-size:0;
+	width: 0;
+	padding-top:0;
+	padding-bottom: 0;}
+}
+
+
+.anim{
+	font-size:1em !important;
+	width: 35px !important;
+	padding-top:10px !important;
+	padding-bottom: 10px !important;
+}
+
+
+.link.anim-remove{
+	-webkit-animation: removeFont 0.2s ease-in !important;
+}
+
+
+.link.anim-add{
+	/*font-size:1em;
+	width: "35px";
+	padding-top:10px;
+	padding-bottom: 10px;*/
+	-webkit-animation: showFont 0.2s ease-in !important; /* Chrome, Safari, Opera */
+	 -webkit-animation-fill-mode: forwards !important;
+}
+
+.link.anim-remove-active{
+	font-size:1em;
+	width: 35px;
+	padding-top:10px;
+	padding-bottom: 10px;
+	
+}
+
+
+
+.link:hover{
+	/*background: -webkit-linear-gradient();*/
+	box-shadow: 0px 2px #89ce1b;
+	color: #89ce1b;
+	cursor: pointer;
+}
+
+
+.logo_text{
+	color: #89ce1b;
+	font-weight: bolder;
+	font-size: 2.2em;
+	font-family: 'Paytone One', sans-serif;
+}
+
+.media_list{
+	text-align: center;
+}
+
+.media_list p{
+	font-style: sans-serif;
+	font-weight: bold;
+	font-size: 0.8em;
+	line-height: 1.8em;
+}
+
+
+.media_list iframe{
+	border-radius: 5px;
+}
+
+
+.media_list ul p{
+	display: block;
+	padding: 5px;
+}
+
+
+.media_list li{
+	display: inline-block;
+	background: #e6e6e6;
+	text-align: center;
+	border:1px solid #c6c6c6;
+	border-radius: 5px;
+	width: 200px;
+	height: 200px;
+	padding:  8px 5px;
+	margin: 10px 10px;
+	cursor: pointer;
+}
+
+.media_list li:hover{
+	background: #c6c6c6;
+}
+
+
+
+.media_list li img{
+	border-radius: 5px;
+	width: 180px;
+	height: 180px;
+}
+
+
+.media_list a{
+	color: #444;
+}
+
+
+.media_list .title{
+	display: block;
+	padding-bottom: 5px;
+	border-bottom: 2px solid #444;
+	margin-left: 120px;
+	margin-right: 110px;
+	text-align: left;
+	font-size: 2em;
+	font-weight: bold;
+	margin-top: 50px;
+	margin-bottom: 10px;
+	font-family: 'Righteous', cursive;
+	color: #444;
+}
+
+.media_list img{
+	margin: 0 auto;
+}
+
+/**********************************
+ selections by id
+ *********************************/
+#menu{
+	position: absolute;
+	top:20px;
+	right: 65px;
+	display: block;
+	padding: 5px 5px;
+	border-radius: 1px;
+	border: 1px liquid #eee;
+	opacity: 0.7;
+}
+
+#menu:hover{
+	background-color: #e6e6e6;
+	border: 1px liquid #89ce1b;
+	box-shadow: 0px 1px #777;
+	cursor: pointer;
+}
+
+#menu:active{
+	body{
+		background: blue;
+	}
+}
+
+#search_button{
+	border: 1px solid #89ce1b;
+	border-radius: 3px;
+	background: -webkit-linear-gradient(top, #89ce1b, #59ae1b);
+	background: -moz-linear-gradient(top, #89ce1b, #59ae1b);
+	background: linear-gradient(top, #89ce1b, #59ae1b);
+	outline-width: 2px;
+	font-weight: bold;
+	font-size: 0.9em;
+	color: #fff;
+	font-family: ;
+	outline-color: #89ce1b;
+}
+
+
+#search_button:hover{
+	/*border: 1px solid #c6c6c6;*/
+	background: #89ce1b;
+	/*box-shadow: 0px 1px #333;*/
+	/*border-bottom: 2px solid #c6c6c6;*/
+}
+
+
+#logo{
+	width:20%;
+	margin: 0 auto;
+	padding-bottom: 1%;
+	padding-top: 12.2%;
+}
+
+#logo img{
+	max-width: 100%;
+}
+
+
+
+
+#search-text{
+	margin-top: 10px;
+	margin-left: 100px;
+	width:500px;
+}
+
+#search
+{
+	max-width: 100%;
+	width:40%;
+	height: 25px;
+	outline-color: #fff;
+	box-shadow: none;
+	border:1px solid #aaa;
+	padding-left: 15px;
+	border-radius: 15px;
+	background-color: #fefefe;
+	
+}
+
+
+#search-text input[type="text"]:focus
+{
+	background-color: #fff;
+	box-shadow: inset 0px 1px #888;
+}
+
+#search_button{
+	height: 30px;
+	margin-left: 2%;
+	font-family: sans-serif;
+	/*margin-bottom: 5%;*/
+}
+
+
+#result_list a{
+	color:#89ce1b;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+/***************************************
+Responsiveness
+***************************************/
+@media screen and (max-width: 560px){
+
+	.media_list img{
+		margin: 0 auto;
+		max-width: 100%;
+	}
+
+	.media_list .title{
+		text-align: center;
+	}
+
+	
+	nav{	
+		margin-right: 30px;
+		margin-left: 30px;
+		padding-bottom: 35px;
+	}
+
+	#menu{
+		right: 30px;
+	}
+
+
+	.link{
+		display: block;
+		float: right;
+		clear: both;
+		border-left: 1px solid #89ce1b;
+		background-color: #fff;
+	}
+
+
+/*
+	.link, #menu{
+		display: none;
+	}*/
+
+	.logo{
+		float: none;
+	}
+
+	#search{
+		display: block;
+		margin-bottom: 10px;
+		margin-top: 10px;
+		width:150px;
+	}
+
+	#search-text{
+		margin-left: 30px;
+		width: 280px;
+	}
+}
+
+
+
+
+
+
+
