@@ -8,7 +8,7 @@ function Reuq(controller) {
 
   this._storeTemplates();
   // submit
-  $('body').on('submit', '[lib-form]:not([lib-tmpl] [lib-form]):not([lib-tmpl][lib-form])', function(e) {
+  $('body').on('submit', '[rq-form]:not([rq-tmpl] [rq-form]):not([rq-tmpl][rq-form])', function(e) {
     e.preventDefault();
     rq.utils.submit($(this))
   });
@@ -59,45 +59,45 @@ Reuq.prototype._processTemplate = function(templateName, data) {
   var template = templateObj.html;
   var $template = $(template);
 
-  // process lib-rsrc-loading
+  // process rq-rsrc-loading
   if (resourceName && this.controller.resources[resourceName].loading) {
-    $template.not('[lib-rsrc-loading], [lib-rsrc-loading] *').remove();
+    $template.not('[rq-rsrc-loading], [rq-rsrc-loading] *').remove();
   } else {
-    $template.find('[lib-rsrc-loading], [lib-rsrc-loading] *').remove();
+    $template.find('[rq-rsrc-loading], [rq-rsrc-loading] *').remove();
   }
 
   //process iteration
-  $template.find('[lib-iter], [lib-iter-self]').each(function(id, el) {
+  $template.find('[rq-iter], [rq-iter-self]').each(function(id, el) {
     var $el = $(el);
 
-    if ($el.is("[lib-iter]")) {
-      var listKey = $el.attr('lib-iter');
+    if ($el.is("[rq-iter]")) {
+      var listKey = $el.attr('rq-iter');
       var list = data[listKey] || [];
     } else {
-      // then it's lib-iter-self
+      // then it's rq-iter-self
       var list = data || [];
     }
     list.forEach(function(listItem) {
       var $compiled = $(compile($el.prop('outerHTML'), listItem));
-      $compiled.removeAttr('lib-iter');
+      $compiled.removeAttr('rq-iter');
       $el.after($compiled);
     });
     $el.remove();
   });
 
   //process ifs
-  $template.find('[lib-if]').each(function(id, el) {
+  $template.find('[rq-if]').each(function(id, el) {
     var $el = $(el);
-    var condition = $el.attr('lib-if');
+    var condition = $el.attr('rq-if');
     if (!data[condition]) {
       $el.remove();
     }
   })
 
   //process if-nots
-  $template.find('[lib-if-not]').each(function(id, el) {
+  $template.find('[rq-if-not]').each(function(id, el) {
     var $el = $(el);
-    var condition = $el.attr('lib-if-not');
+    var condition = $el.attr('rq-if-not');
     if (data[condition]) {
       $el.remove();
     }
@@ -107,10 +107,10 @@ Reuq.prototype._processTemplate = function(templateName, data) {
   $template = $(compile(template, data))
 
   //process src
-  $template.find('[lib-src]').each(function(id, el) {
+  $template.find('[rq-src]').each(function(id, el) {
     var $el = $(el);
-    $el.attr('src', $el.attr('lib-src'));
-    $el.removeAttr('lib-src');
+    $el.attr('src', $el.attr('rq-src'));
+    $el.removeAttr('rq-src');
   })
 
   return $template.prop('outerHTML');
@@ -120,8 +120,8 @@ Reuq.prototype._render = function(templateName, processedTemplate) {
   //remove previously rendered template
   $('[from-tmpl=' + templateName + ']').remove();
 
-  var $template = $('[lib-tmpl][lib-tmpl=' + templateName + ']');
-  var $newTemplate = $(processedTemplate).removeAttr('hidden').removeAttr('lib-tmpl');
+  var $template = $('[rq-tmpl][rq-tmpl=' + templateName + ']');
+  var $newTemplate = $(processedTemplate).removeAttr('hidden').removeAttr('rq-tmpl');
   $newTemplate.attr('from-tmpl', templateName);
   $template.after($newTemplate);
   this.addEvents($newTemplate);
@@ -202,8 +202,8 @@ Reuq.prototype.setResource = function(resourceName, data) {
   resource.updatedAt = new Date();
   this.runResourceSubscribers(resourceName, data);
 
-  $('[lib-tmpl][lib-rsrc=' + resourceName + ']:not([manual-render])').each(function(id, el) {
-    rq.renderData($(el).attr('lib-tmpl'), data);
+  $('[rq-tmpl][rq-rsrc=' + resourceName + ']:not([manual-render])').each(function(id, el) {
+    rq.renderData($(el).attr('rq-tmpl'), data);
   });
 }
 
@@ -226,8 +226,8 @@ Reuq.prototype.setLocal = function(name, data) {
   local.data = data;
   this.runLocalSubscribers(name, data);
 
-  $('[lib-tmpl][lib-local=' + name + ']:not([manual-render])').each(function(id, el) {
-    rq.renderData($(el).attr('lib-tmpl'), data);
+  $('[rq-tmpl][rq-local=' + name + ']:not([manual-render])').each(function(id, el) {
+    rq.renderData($(el).attr('rq-tmpl'), data);
   });
 }
 
@@ -260,13 +260,13 @@ Reuq.prototype.runSubscribers = function(subscribers, data) {
 //storeTemplates
 Reuq.prototype._storeTemplates = function() {
   var rq = this;
-  $('[lib-tmpl]').each(function(id, el) {
+  $('[rq-tmpl]').each(function(id, el) {
     var $el = $(el);
-    rq.templates[$el.attr('lib-tmpl')] = {
+    rq.templates[$el.attr('rq-tmpl')] = {
       html: $el.prop('outerHTML'),
       dom: $el,
-      dataKey: $el.attr('lib-data'),
-      resourceName: $el.attr('lib-rsrc')
+      dataKey: $el.attr('rq-data'),
+      resourceName: $el.attr('rq-rsrc')
     };
   });
 }
@@ -274,10 +274,10 @@ Reuq.prototype._storeTemplates = function() {
 Reuq.prototype.addEvents = function($dom) {
   $dom = $dom || $('body');
   var rq = this;
-  var evtSelector = '[lib-evt]:not([lib-tmpl] [lib-evt]):not([lib-tmpl][lib-evt])';
+  var evtSelector = '[rq-evt]:not([rq-tmpl] [rq-evt]):not([rq-tmpl][rq-evt])';
   $dom.find(evtSelector).addBack(evtSelector).each(function(id, el) {
     var $el = $(el);
-    var evtConfig = $el.attr('lib-evt').split(' ')
+    var evtConfig = $el.attr('rq-evt').split(' ')
     var evtType = evtConfig[0];
     var evtHandler = rq.controller.eventHandlers[evtConfig[1]];
     $el.on(evtType, function(e) {
@@ -299,13 +299,13 @@ Reuq.prototype.getUtils = function() {
 
       $.ajax({ type: type, url: url, data: data })
         .done(function(data, status, jqXHR) {
-          var cb = form.attr('lib-cb-done');
+          var cb = form.attr('rq-cb-done');
           if (cb) {
             rq.controller.callbacks[cb](data, status, form);
           }
         })
         .fail(function(jqXHR, status, error) {
-          var cb = form.attr('lib-cb-fail');
+          var cb = form.attr('rq-cb-fail');
           if (cb) {
             rq.controller.callbacks[cb](error, status, form, jqXHR);
           }
@@ -314,5 +314,5 @@ Reuq.prototype.getUtils = function() {
   }
 }
 
-$('head').append('<style type="text/css">[lib-tmpl] {display: none !important;}</style>');
+$('head').append('<style type="text/css">[rq-tmpl] {display: none !important;}</style>');
 window.Rq = window.Reuq = Reuq;
