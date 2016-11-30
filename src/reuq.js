@@ -304,7 +304,6 @@ Reuq.prototype.addEvents = function($dom) {
 
 Reuq.prototype.getUtils = function() {
   var rq = this;
-  console.log(rq);
 
   return {
     submit: function(form) {
