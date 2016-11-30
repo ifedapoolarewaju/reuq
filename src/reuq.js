@@ -46,10 +46,25 @@ Reuq.prototype.render = function(templateName, data) {
 Reuq.prototype._processTemplate = function(templateName, data) {
   var rq = this;
 
+  function sanitize(value) {
+    var blacklist = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return value.replace(/[&<>"']/g, function(m) {
+      return blacklist[m];
+    })
+  }
+
   function compile(template, data) {
-    template = template.replace(/\[\[(\w+)\]\]/g, function(){
+    template = template.replace(/\[\[(\w+)\]\]/g, function() {
       var expression = arguments[1];
-      return data[expression] || rq.controller.fn[expression].apply(data);
+      // parse value to string
+      var value = "" + (data[expression] || rq.controller.fn[expression].apply(data));
+      return sanitize(value);
     });
     return template;
   }
@@ -176,7 +191,7 @@ Reuq.prototype.getResource = function(resourceName, force, cb) {
     $.ajax({
       url: url,
       beforeSend: function(xhr) {
-        Object.keys(resource.headers || {}).forEach(function(header){
+        Object.keys(resource.headers || {}).forEach(function(header) {
           xhr.setRequestHeader(header, resource.headers[header]);
         })
       },
