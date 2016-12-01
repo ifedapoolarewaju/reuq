@@ -73,7 +73,7 @@ nav{
 	margin-right: 100px;
 	margin-left: 100px;
 	margin-top: 15px;
-	padding-bottom: 25px;
+	padding-bottom: 35px;
 	border-bottom: 4px solid #a9de3b;
 }
 
@@ -163,10 +163,6 @@ selections by class
 
 
 .link.anim-add{
-	/*font-size:1em;
-	width: "35px";
-	padding-top:10px;
-	padding-bottom: 10px;*/
 	-webkit-animation: showFont 0.2s ease-in !important; /* Chrome, Safari, Opera */
 	 -webkit-animation-fill-mode: forwards !important;
 }
@@ -212,6 +208,9 @@ selections by class
 	border-radius: 5px;
 }
 
+.media_list ul {
+	padding: 0 3%;
+}
 
 .media_list ul p{
 	display: block;
@@ -312,10 +311,7 @@ selections by class
 
 
 #search_button:hover{
-	/*border: 1px solid #c6c6c6;*/
 	background: #89ce1b;
-	/*box-shadow: 0px 1px #333;*/
-	/*border-bottom: 2px solid #c6c6c6;*/
 }
 
 
@@ -364,7 +360,6 @@ selections by class
 	height: 30px;
 	margin-left: 2%;
 	font-family: sans-serif;
-	/*margin-bottom: 5%;*/
 }
 
 
@@ -372,6 +367,15 @@ selections by class
 	color:#89ce1b;
 	font-size: 1.5em;
 	font-weight: bold;
+}
+
+button.close {
+	border-radius: 25px;
+	background-color: white;
+	color: #888;
+	cursor: pointer;
+	margin-left: 80%;
+	outline: none;
 }
 
 /***************************************
