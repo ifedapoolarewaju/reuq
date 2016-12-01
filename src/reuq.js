@@ -311,11 +311,21 @@ Reuq.prototype.getUtils = function() {
       var url = form.attr('action');
       var type = form.attr('method');
 
-      $.ajax({ type: type, url: url, data: data })
+      var beforeSend = function(xhr) {
+        var headersKey = form.attr('rq-form-headers');
+        if (headersKey) {
+          var headers = rq.controller.fn[headersKey].apply(rq);
+          Object.keys(headers || {}).forEach(function(header) {
+            xhr.setRequestHeader(header, headers[header]);
+          })
+        }
+      }
+
+      $.ajax({ type: type, url: url, data: data, beforeSend: beforeSend })
         .done(function(data, status, jqXHR) {
           var cb = form.attr('rq-cb-done');
           if (cb) {
-            rq.controller.callbacks[cb](data, status, form);
+            rq.controller.callbacks[cb].apply(rq, [data, status, form]);
           }
         })
         .fail(function(jqXHR, status, error) {
