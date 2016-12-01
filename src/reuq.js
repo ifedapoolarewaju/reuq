@@ -142,22 +142,6 @@ Reuq.prototype._render = function(templateName, processedTemplate) {
   this.addEvents($newTemplate);
 }
 
-//renderEach
-Reuq.prototype.renderEach = function(templateName, dataList) {
-  var rq = this;
-
-  var subTemplates = dataList.map(function(data) {
-    return rq._processTemplate(templateName, data);
-  });
-  this._render(templateName, subTemplates.join(''));
-}
-
-//renderData
-//TODO automatically subscribe templates to resource changes
-Reuq.prototype.renderData = function(templateName, data) {
-  this.render(templateName, data);
-}
-
 Reuq.prototype.cacheIsValid = function(resourceName) {
   var resource = this.controller.resources[resourceName]
 
@@ -218,7 +202,7 @@ Reuq.prototype.setResource = function(resourceName, data) {
   this.runResourceSubscribers(resourceName, data);
 
   $('[rq-tmpl][rq-rsrc=' + resourceName + ']:not([manual-render])').each(function(id, el) {
-    rq.renderData($(el).attr('rq-tmpl'), data);
+    rq.render($(el).attr('rq-tmpl'), data);
   });
 }
 
@@ -242,7 +226,7 @@ Reuq.prototype.setLocal = function(name, data) {
   this.runLocalSubscribers(name, data);
 
   $('[rq-tmpl][rq-local=' + name + ']:not([manual-render])').each(function(id, el) {
-    rq.renderData($(el).attr('rq-tmpl'), data);
+    rq.render($(el).attr('rq-tmpl'), data);
   });
 }
 
