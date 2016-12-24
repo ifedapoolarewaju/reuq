@@ -63,7 +63,7 @@ Reuq.prototype._processTemplate = function(templateName, data) {
     template = template.replace(/\[\[(\w+)\]\]/g, function() {
       var expression = arguments[1];
       // parse value to string
-      var value = "" + (data[expression] || rq.controller.fn[expression].apply(data));
+      var value = "" + (data[expression] || rq.controller.dynamicProperties[expression].apply(rq, [data]));
       return sanitize(value);
     });
     return template;
@@ -174,6 +174,7 @@ Reuq.prototype.getResource = function(resourceName, force, cb) {
     var url = typeof resource.url === 'function' ? resource.url(this) : resource.url;
     $.ajax({
       url: url,
+      dataType: "json",
       beforeSend: function(xhr) {
         Object.keys(resource.headers || {}).forEach(function(header) {
           xhr.setRequestHeader(header, resource.headers[header]);
@@ -280,7 +281,7 @@ Reuq.prototype.addEvents = function($dom) {
     var evtType = evtConfig[0];
     var evtHandler = rq.controller.eventHandlers[evtConfig[1]];
     $el.on(evtType, function(e) {
-      var handlerArgs = [$el].concat(evtConfig.slice(2))
+      var handlerArgs = [{event: e, target: $el}].concat(evtConfig.slice(2))
       evtHandler.apply(rq, handlerArgs);
     })
   });
