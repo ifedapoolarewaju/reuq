@@ -1,4 +1,4 @@
-var controller = {
+var app = {
   dynamicProperties: {
     videoId: function(data) {
       return data.uri.substr(8);
@@ -16,5 +16,5 @@ var controller = {
 }
 
 $(function() {
-  new Reuq(controller);
+  new Reuq(app);
 })
