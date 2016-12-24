@@ -20,24 +20,6 @@
         </ul>
       </nav>
     </header>
-    <section id="search-text">
-      <form rq-form rq-cb-done="renderSearch" rq-form-headers="searchFormHeaders" action="https://api.vimeo.com/videos?per_page=5">
-        <input type="text" id="search" name="query" placeholder="Search here...">
-        <button id="search_button" value="search">Search videos</button>
-      </form>
-    </section>
-    
-    <section class="media_list" rq-tmpl='searchedVideos'>
-      <h1 class="title">Search result <button class="close" rq-evt="click close">x</button></h1>
-      <ul id="video">
-        <img rq-rsrc-loading rq-src='img/loading_icon.gif'>
-        <li rq-iter-self>
-          <iframe rq-src="https://player.vimeo.com/video/[[videoId]]"
-           width='180' height='180' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-          <p title="[[name]]">[[nameTrunc]]</p>
-        </li>
-      </ul>
-    </section>
 
     <section class="media_list">
       <h1 class="title">Videos</h1>
