@@ -1,0 +1,28 @@
+{
+  "name": "reuq",
+  "version": "0.0.1",
+  "description": "Frontend Javascript framework built on top of JQuery",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ifedapoolarewaju/reuq.git"
+  },
+  "keywords": [
+    "framework",
+    "jquery",
+    "lightweight",
+    "frontend"
+  ],
+  "author": "Ifedapo .A. Olarewaju",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ifedapoolarewaju/reuq/issues"
+  },
+  "homepage": "https://github.com/ifedapoolarewaju/reuq#readme"
+}
