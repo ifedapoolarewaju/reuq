@@ -120,7 +120,7 @@ from the url specified and renders it to the DOM via the template it is tied to.
 
 Load the Page from your browser and watch the Magic happen.
 
-See ADD_DOC_URL_HERE for more on templates.
+See `ADD_DOC_URL_HERE` for more on templates.
 
 That's it!!! You are already using reuq, writing less DOM manipulation code. Please view the full doc ADD_DOC_URL_HERE to
 see more Magical things that Reuq is capable of.
@@ -362,9 +362,77 @@ The Reuq Template comes with the following useful attributes
 
 **rq-iter**
 
+This attribute is used to iterate over array properties of data. e.g
+
+```javascript
+{
+  ...
+  person: {
+    firstName: "Ifedapo"
+    phoneNumbers: [{number: "009123455667"}, {number: "008123445678"}]
+    ...
+  }
+}
+```
+
+```html
+<div rq-tmpl="template" rq-local="person">
+  ...
+  <ul>
+    <!-- would display li for  "009123455667" and "008123445678" -->
+    <li rq-iter="phoneNumbers">
+      [[number]]
+    </li>
+  </ul>
+</div>
+```
+
+as of now, each element in the iterated array is expected to be an object whose attributes would be accessed.
+
+*TODO: make an array with other type elements e.g [1, 2, 4] compatible with req-iter*
+
+
 **rq-iter-self**
+This is the same as `req-iter` but instead of iterating one of the object data properties, it iterates the object itself.
+This is useful for when the data tied to the template is an array.
+e.g
+
+ ```javascript
+{
+  ...
+  cars: [{name: "Lambo"}, {name: "Mercedes"}, {name: "volvo"}]
+    ...
+  }
+}
+```
+
+```html
+<div rq-tmpl="template" rq-local="cars">
+  ...
+  <ul>
+    <!-- would display li for  "Lambo" and "Mercedes" and "volvo" -->
+    <li rq-iter-self>
+      [[name]]
+    </li>
+  </ul>
+</div>
+```
 
 **rq-rsrc-loading**
+
+While Reuq is fetching a resource from an endpoint, you might want to display a message or an image(e.g loading gif) to
+users as interactive feedback. With reuq templates, any element with the attribute `rq-rsrc-loading` will only display
+while the resource it is tied to is loading. *Note that this only works with `resources` and it doesn't work with `local data`*
+
+e.g
+
+```html
+<div rq-tmpl="templateName" rq-rsrc="resourceName">
+  ...
+  <!-- will only display while resource is loading -->
+  <span rq-rsrc-loading>Loading ...</span>
+</div>
+```
 
 **rq-if**
 
@@ -420,8 +488,41 @@ The `span` will render because in the `javascript` object the `male` property is
 
 **rq-src**
 
+When using elements that have attribute `src` with  reuq Templates, it is advisable to use `rq-src` instead
+so the url doesn't unneccessarily load until the template is being rendered.
+
 **manual-render**
+
+On loading of the web page, by default reuq fetches all resources and renders all templates tied with resources and local data
+that are available.
+
+If you don't want the template to render automatically
 
 ## 4. Working with resources
 
-## 5. Working with locals
+With the Reuq instance there are a couple of things you can do with a resource.
+
+```javascript
+reuqInstance.getResource("person", function(data){
+  console.log(data.firstName)
+})
+```
+
+```javascript
+reuqInstance.getResource("person", true, function(data){
+  console.log(data.firstName)
+})
+```
+
+```javascript
+reuqInstance.updateResource("person", function(data){
+  data.firstName = "John"
+  return data
+})
+```
+
+<!-- ## 5. Working with locals -->
+
+<!-- With the Reuq instance there are a couple of things you can do with local data. -->
+
+<!-- ## 6. Accessing the Reuq instance -->
