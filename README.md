@@ -16,21 +16,16 @@ Requires JQuery
 ## 1. Getting Started
 
 #### Installation
-`npm install reuq`
+`npm install reuq` or `bower install reuq`
 
-or
-
-`bower install reuq`
-
-or load from cdn
-
-`CDN URL HERE`
+or load from cdn `CDN URL HERE`
 
 #### Load Reuq
 Create a file `index.html`
 On our html file we'll need to load `reuq.js` and its dependencies
 
 *index.html*
+
 ```html
 <html>
   <head>
@@ -54,6 +49,7 @@ Create a javascript file `app.js`
 load it on your `index.html`
 
 *index.html*
+
 ```html
   ...
   <script type="text/javascript" src="PATH_TO_JQUERY/jquery-1.11.1.js" charset="utf-8"></script>
@@ -117,7 +113,9 @@ Make `index.html` to become this
 `rq-rsrc='videos'` tells reuq what resource this template is tied to. In this case we are tying it to the `videos`
 resource we declared in our `app.js`.
 
-**THE MAGIC IS** by doing this, when the page loads, reuq automatically loads the resource
+**THE MAGIC IS**
+
+by doing this, when the page loads, reuq automatically loads the resource
 from the url specified and renders it to the DOM via the template it is tied to.
 
 Load the Page from your browser and watch the Magic happen.
@@ -148,6 +146,37 @@ This Object should contain all the information you need to pass along to `Reuq` 
 The following are the Options that you can pass to the `app` Object before instantiating `Reuq`.
 
 **resources**
+This is an Object telling Reuq what external resources (API endpoints) you want to retrieve data from.
+Here's an example:
+
+```javascript
+{
+  ...
+  resources: {
+    people: {
+      url: "http://myap.com/people/"
+      ...
+    }
+    cars: {
+     url: "http://myap.com/people/"
+    }
+  }
+}
+```
+
+Each resource can contain the following properties:
+
+- `url`: url to the resource. This can be full url or relative.
+- `dataKey`: The response object property to access the resource data from. If not set, the entire json response
+  object would be stored as the data
+- `headers`: Headers to add to every request made to the endpoint. e.g
+
+```javascript
+...
+headers: {
+  Authorization: 'bearer AUTH_KEY_HERE'
+}
+```
 
 **locals**
 
@@ -178,6 +207,8 @@ var rq = new Reuq(app);
 rq.setLocal("person", {name: "Ifedapo Olarewaju"})
 rq.setLocal("cars", ["Lambo", "Mercedes"])
 ```
+
+This would also automatically render Templates tied to such local data.
 
 To get local data you do:
 
@@ -268,6 +299,7 @@ want to tag as a template. e.g
 To tie a template to javascript data you can do one of the following
 
 - Tie it to a `resource` by adding the `rq-rsrc` attribute. e.g
+
 ```html
 <div rq-tmpl="MyTemplateName" rq-rsrc="myResource">
   ...
@@ -290,8 +322,31 @@ var app = {
 new Reuq(app);
 ```
 
-- Tie it to local
-...
+- Tie it to `local` data by adding the `rq-local` attribute. e.g
+
+
+```html
+<div rq-tmpl="MyTemplateName" rq-local="pserson">
+  ...
+</div>
+```
+
+this would automatically tie to local named `pserson` which you may have declared in your Reuq app object like so.
+
+```javascript
+var app = {
+  ...
+  locals: {
+    pserson: {
+      firstName: "Ifedapo"
+      ...
+    }
+  }
+}
+
+new Reuq(app);
+```
+
 
 To access properties of an object data in a template, you surround it with double square brackets.
 
@@ -313,7 +368,55 @@ The Reuq Template comes with the following useful attributes
 
 **rq-if**
 
+an element with this attribute would be rendered if the data property assigned to the attribute has a truthy value.
+e.g:
+
+```javascript
+{
+  ...
+  locals: {
+    person: {
+      name: "Jane",
+      male: false
+    }
+  }
+}
+```
+
+```html
+<div rq-tmpl="template" rq-local="person">
+  ...
+  <span rq-if="male">He is a boy</span>
+</div>
+```
+
+The `span` will not render because in the `javascript` object the `male` property is `false`.
+
 **rq-if-not**
+
+an element with this attribute would be rendered if the data property assigned to the attribute has a falsy value.
+e.g:
+
+```javascript
+{
+  ...
+  locals: {
+    person: {
+      name: "Jane",
+      male: false
+    }
+  }
+}
+```
+
+```html
+<div rq-tmpl="template" rq-local="person">
+  ...
+  <span rq-if-not="male">She is a girl</span>
+</div>
+```
+
+The `span` will render because in the `javascript` object the `male` property is `false`.
 
 **rq-src**
 
