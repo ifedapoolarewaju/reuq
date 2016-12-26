@@ -1,4 +1,4 @@
-# reuq
+# Reuq.js
 Frontend Javascript framework
 
 Reuq is a frontend Javascript framework built on top of JQuery.
@@ -13,7 +13,7 @@ and making you write less DOM manipulation code while you still stick to JQuery,
 ## Prerequisites
 Requires JQuery
 
-## Getting Started
+## 1. Getting Started
 
 #### Installation
 `npm install reuq`
@@ -126,3 +126,199 @@ See ADD_DOC_URL_HERE for more on templates.
 
 That's it!!! You are already using reuq, writing less DOM manipulation code. Please view the full doc ADD_DOC_URL_HERE to
 see more Magical things that Reuq is capable of.
+
+## 2. The App Object
+
+When instantiating Reuq, it takes in an object as an argument, this object represents your application and is added as an attribute
+`app` to the `reuq` instance.
+
+```javascript
+var app = {
+  ...
+}
+
+var reuqInstance = new Reuq(app)
+
+// to access app from reuqInstance
+reuqInstance.app
+```
+
+This Object should contain all the information you need to pass along to `Reuq` for operation.
+
+The following are the Options that you can pass to the `app` Object before instantiating `Reuq`.
+
+**resources**
+
+**locals**
+
+This is an object within you can store local data that isn't to an external API url. Here's an example stored local data.
+
+```javascript
+{
+  ...
+  locals: {
+    person: {
+      name: "Ifedapo Olarewaju"
+    },
+    cars: ["Lambo", "Mercedes"]
+  }
+  ...
+}
+```
+
+To set a local data dynamically you can use the reuq instance of your app like so.
+
+```javascript
+app = {
+  ...
+}
+
+var rq = new Reuq(app);
+
+rq.setLocal("person", {name: "Ifedapo Olarewaju"})
+rq.setLocal("cars", ["Lambo", "Mercedes"])
+```
+
+To get local data you do:
+
+```javascript
+var person = rq.getLocal("person")
+```
+
+**dynamicProperties**
+
+Because within a Reuq Template you cannot pass expressions like `[[age * 2]]`, you can only access
+properties of the data to which the template is tied.
+
+But sometimes we want to do some formatting or calculation with the data property before we render it. This can
+be done with `dynamicProperties`. Here's an example:
+
+```javascript
+{
+  ...
+  dynamicProperties: {
+    fullName: function(data) {
+      return data.firstName + " " + data.lastName
+    }
+  }
+  ...
+  locals: {
+    person: {
+      firstName: "Ifedapo",
+      lastName: "Olarewaju"
+    }
+  }
+}
+```
+
+```html
+  <div rq-tmpl="personTmpl" rq-local="person">
+    <!-- would dislplay "Ifedapo" -->
+    <p>[[firstName]]</p>
+
+    <!--  would display "Ifedapo Olarewaju" -->
+    <p>[[fullName]]</p>
+  </div>
+```
+
+**eventHandlers**
+
+In a situation where you are making use of Reuq Templates and you need to add event handlers to elements on the template.
+You can easily do this with Reuq events see `ADD_DOC_URL_HERE`. Here's an example
+
+```html
+<div rq-tmpl="templateName">
+  ...
+  <button rq-evt="click showMessage">Show Message</button>
+</div>
+```
+
+```javascript
+{
+  ...
+  eventHandlers: {
+    function(evt) {
+      alert("Here's your Message")
+    }
+  }
+}
+```
+
+Where `evt` is an object with 2 attributes
+
+- `event`: An instance of jquery event Object.
+- `target`: A jquery instance of the target element
+
+<!-- **fn** -->
+
+<!-- **callbacks** -->
+
+## 3. Reuq Templates
+
+With Reuq Templates you can tie data from your javascript to your DOM. This helps you automatically update your
+DOM as the data changes. To add a Reuq Template to your html, just add the attribute `rq-tmpl` to the element you
+want to tag as a template. e.g
+
+```html
+<div rq-tmpl="MyTemplateName">
+  ...
+</div>
+```
+
+To tie a template to javascript data you can do one of the following
+
+- Tie it to a `resource` by adding the `rq-rsrc` attribute. e.g
+```html
+<div rq-tmpl="MyTemplateName" rq-rsrc="myResource">
+  ...
+</div>
+```
+
+this would automatically tie to resource named `myResource` which you may have declared in your Reuq app object like so.
+
+```javascript
+var app = {
+  ...
+  resources: {
+    myResource: {
+      url: '/endpoint/'
+      ...
+    }
+  }
+}
+
+new Reuq(app);
+```
+
+- Tie it to local
+...
+
+To access properties of an object data in a template, you surround it with double square brackets.
+
+```html
+<div rq-tmpl="MyTemplateName" rq-rsrc="person">
+  <p>[[firstName]]</p>
+  <p>[[lastName]]</p>
+  <p>[[age]]</p>
+</div>
+```
+
+The Reuq Template comes with the following useful attributes
+
+**rq-iter**
+
+**rq-iter-self**
+
+**rq-rsrc-loading**
+
+**rq-if**
+
+**rq-if-not**
+
+**rq-src**
+
+**manual-render**
+
+## 4. Working with resources
+
+## 5. Working with locals
