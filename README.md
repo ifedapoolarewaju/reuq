@@ -15,12 +15,12 @@ Requires JQuery
 
 ## 1. Getting Started
 
-#### Installation
+#### i. Installation
 `npm install reuq` or `bower install reuq`
 
 or load from cdn `CDN URL HERE`
 
-#### Load Reuq
+#### ii. Load Reuq
 Create a file `index.html`
 On our html file we'll need to load `reuq.js` and its dependencies
 
@@ -40,9 +40,9 @@ On our html file we'll need to load `reuq.js` and its dependencies
 </html>
 ```
 
-#### Initiating Reuq
-Download the json file from ADD VIDEOS URLS HERE and save it to `resources/videos.json` relative
-to the project directory.
+#### iii. Initiating Reuq
+Download the json file from [here](https://raw.githubusercontent.com/ifedapoolarewaju/reuq/master/examples/store/resources/videos.json)
+and save it to `resources/videos.json` relative to the project directory.
 
 Create a javascript file `app.js`
 
@@ -80,17 +80,17 @@ $(function() {
 })
 ```
 
-The `resources` key in line ADD_LINE_NUMBER_HERE makes `reuq` know what API resource endpoints your app
-will be working with. In this case we load a json file instead because we don't have an API to make calls to.
-But this could as well be a full url like "http://myapi.com/endpoint/" or a relative one like "/endpoint/"
+The `resources` key makes `reuq` know what API resource endpoints your app will be working with.
+In this case we load a json file instead because we don't have an API to make calls to.
+But this could as well be a full url like `http://myapi.com/endpoint/` or a relative one like `/endpoint/`
 
-on line ADD_LINE_NUMBER_HERE `videos` is the name of the particular resource. You can name it anything you like
+`videos` is the name of the particular resource. You can name it anything you like.
 
-on line ADD_LINE_NUMBER_HERE `dataKey` is the JSON object key to access the resource data from. Notice that in `videos.json`
+`dataKey` is the JSON object key to access the resource data from. Notice that in `videos.json`
 the array of videos is stored under the attribute `data`. To inform Reuq of what key to access data of a resource you add `dataKey`
 see ADD_DOC_URL_HERE for more.
 
-#### Loading resources to DOM with Reuq Templates
+#### iv. Loading resources to DOM with Reuq Templates
 
 Make `index.html` to become this
 
@@ -145,7 +145,7 @@ This Object should contain all the information you need to pass along to `Reuq` 
 
 The following are the Options that you can pass to the `app` Object before instantiating `Reuq`.
 
-**resources**
+#### i. resources
 This is an Object telling Reuq what external resources (API endpoints) you want to retrieve data from.
 Here's an example:
 
@@ -178,7 +178,7 @@ headers: {
 }
 ```
 
-**locals**
+#### ii. locals
 
 This is an object within you can store local data that isn't to an external API url. Here's an example stored local data.
 
@@ -216,7 +216,7 @@ To get local data you do:
 var person = rq.getLocal("person")
 ```
 
-**dynamicProperties**
+#### iii. dynamicProperties
 
 Because within a Reuq Template you cannot pass expressions like `[[age * 2]]`, you can only access
 properties of the data to which the template is tied.
@@ -252,7 +252,7 @@ be done with `dynamicProperties`. Here's an example:
   </div>
 ```
 
-**eventHandlers**
+#### iv. eventHandlers
 
 In a situation where you are making use of Reuq Templates and you need to add event handlers to elements on the template.
 You can easily do this with Reuq events see `ADD_DOC_URL_HERE`. Here's an example
@@ -283,6 +283,7 @@ Where `evt` is an object with 2 attributes
 <!-- **fn** -->
 
 <!-- **callbacks** -->
+
 
 ## 3. Reuq Templates
 
@@ -360,7 +361,7 @@ To access properties of an object data in a template, you surround it with doubl
 
 The Reuq Template comes with the following useful attributes
 
-**rq-iter**
+#### i. rq-iter
 
 This attribute is used to iterate over array properties of data. e.g
 
@@ -392,7 +393,7 @@ as of now, each element in the iterated array is expected to be an object whose 
 *TODO: make an array with other type elements e.g [1, 2, 4] compatible with req-iter*
 
 
-**rq-iter-self**
+#### ii. rq-iter-self
 This is the same as `req-iter` but instead of iterating one of the object data properties, it iterates the object itself.
 This is useful for when the data tied to the template is an array.
 e.g
@@ -418,7 +419,7 @@ e.g
 </div>
 ```
 
-**rq-rsrc-loading**
+#### iii. rq-rsrc-loading
 
 While Reuq is fetching a resource from an endpoint, you might want to display a message or an image(e.g loading gif) to
 users as interactive feedback. With reuq templates, any element with the attribute `rq-rsrc-loading` will only display
@@ -434,7 +435,7 @@ e.g
 </div>
 ```
 
-**rq-if**
+#### iv. rq-if
 
 an element with this attribute would be rendered if the data property assigned to the attribute has a truthy value.
 e.g:
@@ -460,7 +461,7 @@ e.g:
 
 The `span` will not render because in the `javascript` object the `male` property is `false`.
 
-**rq-if-not**
+#### v. rq-if-not
 
 an element with this attribute would be rendered if the data property assigned to the attribute has a falsy value.
 e.g:
@@ -486,12 +487,12 @@ e.g:
 
 The `span` will render because in the `javascript` object the `male` property is `false`.
 
-**rq-src**
+#### vi. rq-src
 
 When using elements that have attribute `src` with  reuq Templates, it is advisable to use `rq-src` instead
 so the url doesn't unneccessarily load until the template is being rendered.
 
-**manual-render**
+#### vii. manual-render
 
 On loading of the web page, by default reuq fetches all resources and renders all templates tied with resources and local data
 that are available.
