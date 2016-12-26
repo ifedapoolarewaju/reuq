@@ -1,9 +1,9 @@
 "use strict";
 
-function Reuq(controller) {
+function Reuq(app) {
   var rq = this;
   this.templates = {};
-  this.controller = controller;
+  this.app = app;
   this.utils = this.getUtils();
 
   this._storeTemplates();
@@ -14,8 +14,8 @@ function Reuq(controller) {
   });
 
   (function(rq) {
-    var resources = rq.controller.resources;
-    var locals = rq.controller.locals || {};
+    var resources = rq.app.resources;
+    var locals = rq.app.locals || {};
 
     Object.keys(locals).forEach(function(name) {
       rq.setLocal(name, rq.getLocal(name));
@@ -31,8 +31,8 @@ function Reuq(controller) {
 
     rq.addEvents();
     // should this be run 1st inetead?
-    if (typeof rq.controller.onInit === 'function') {
-      rq.controller.onInit.apply(rq);
+    if (typeof rq.app.onInit === 'function') {
+      rq.app.onInit.apply(rq);
     }
   })(this);
 }
@@ -63,7 +63,7 @@ Reuq.prototype._processTemplate = function(templateName, data) {
     template = template.replace(/\[\[(\w+)\]\]/g, function() {
       var expression = arguments[1];
       // parse value to string
-      var value = "" + (data[expression] || rq.controller.dynamicProperties[expression].apply(rq, [data]));
+      var value = "" + (data[expression] || rq.app.dynamicProperties[expression].apply(rq, [data]));
       return sanitize(value);
     });
     return template;
@@ -75,7 +75,7 @@ Reuq.prototype._processTemplate = function(templateName, data) {
   var $template = $(template);
 
   // process rq-rsrc-loading
-  if (resourceName && this.controller.resources[resourceName].loading) {
+  if (resourceName && this.app.resources[resourceName].loading) {
     $template.not('[rq-rsrc-loading], [rq-rsrc-loading] *').remove();
   } else {
     $template.find('[rq-rsrc-loading], [rq-rsrc-loading] *').remove();
@@ -143,7 +143,7 @@ Reuq.prototype._render = function(templateName, processedTemplate) {
 }
 
 Reuq.prototype.cacheIsValid = function(resourceName) {
-  var resource = this.controller.resources[resourceName]
+  var resource = this.app.resources[resourceName]
 
   if (resource.shouldReload) {
     return false;
@@ -155,7 +155,7 @@ Reuq.prototype.cacheIsValid = function(resourceName) {
 }
 
 Reuq.prototype.invalidateResourceCache = function(resourceName) {
-  this.controller.resources[resourceName].shouldReload = true;
+  this.app.resources[resourceName].shouldReload = true;
 }
 
 Reuq.prototype.getResource = function(resourceName, force, cb) {
@@ -165,7 +165,7 @@ Reuq.prototype.getResource = function(resourceName, force, cb) {
     force = false;
   }
   var rq = this;
-  var resource = this.controller.resources[resourceName];
+  var resource = this.app.resources[resourceName];
   if (resource.data && !force && this.cacheIsValid(resourceName)) {
     cb(resource.data);
   } else {
@@ -196,7 +196,7 @@ Reuq.prototype.getResource = function(resourceName, force, cb) {
 
 Reuq.prototype.setResource = function(resourceName, data) {
   var rq = this;
-  var resource = this.controller.resources[resourceName];
+  var resource = this.app.resources[resourceName];
   resource.data = data;
   resource.shouldReload = false;
   resource.updatedAt = new Date();
@@ -208,7 +208,7 @@ Reuq.prototype.setResource = function(resourceName, data) {
 }
 
 Reuq.prototype.runResourceSubscribers = function(resourceName, data) {
-  var resource = this.controller.resources[resourceName];
+  var resource = this.app.resources[resourceName];
   data = data || resource.data;
   this.runSubscribers(resource.subscribers, data)
 }
@@ -222,7 +222,7 @@ Reuq.prototype.updateResource = function(resourceName, cb) {
 
 Reuq.prototype.setLocal = function(name, data) {
   var rq = this;
-  var local = this.controller.locals[name];
+  var local = this.app.locals[name];
   local.data = data;
   this.runLocalSubscribers(name, data);
 
@@ -232,7 +232,7 @@ Reuq.prototype.setLocal = function(name, data) {
 }
 
 Reuq.prototype.getLocal = function(name) {
-  return this.controller.locals[name].data;
+  return this.app.locals[name].data;
 }
 
 Reuq.prototype.updateLocal = function(name, cb) {
@@ -241,7 +241,7 @@ Reuq.prototype.updateLocal = function(name, cb) {
 }
 
 Reuq.prototype.runLocalSubscribers = function(name, data) {
-  var local = this.controller.locals[name];
+  var local = this.app.locals[name];
   data = data || local.data;
   this.runSubscribers(local.subscribers, data);
 }
@@ -251,7 +251,7 @@ Reuq.prototype.runSubscribers = function(subscribers, data) {
   if (subscribers) {
     subscribers.forEach(function(subscriber) {
       var path = subscriber.split('.');
-      var fn = rq.controller[path[0]][path[1]];
+      var fn = rq.app[path[0]][path[1]];
       fn.apply(rq, [data]);
     })
   }
@@ -265,7 +265,7 @@ Reuq.prototype._storeTemplates = function() {
     rq.templates[$el.attr('rq-tmpl')] = {
       html: $el.prop('outerHTML'),
       dom: $el,
-      dataKey: $el.attr('rq-data'),
+      localDataName: $el.attr('rq-local'),
       resourceName: $el.attr('rq-rsrc')
     };
   });
@@ -279,7 +279,7 @@ Reuq.prototype.addEvents = function($dom) {
     var $el = $(el);
     var evtConfig = $el.attr('rq-evt').split(' ')
     var evtType = evtConfig[0];
-    var evtHandler = rq.controller.eventHandlers[evtConfig[1]];
+    var evtHandler = rq.app.eventHandlers[evtConfig[1]];
     $el.on(evtType, function(e) {
       var handlerArgs = [{event: e, target: $el}].concat(evtConfig.slice(2))
       evtHandler.apply(rq, handlerArgs);
@@ -299,7 +299,7 @@ Reuq.prototype.getUtils = function() {
       var beforeSend = function(xhr) {
         var headersKey = form.attr('rq-form-headers');
         if (headersKey) {
-          var headers = rq.controller.fn[headersKey].apply(rq);
+          var headers = rq.app.fn[headersKey].apply(rq);
           Object.keys(headers || {}).forEach(function(header) {
             xhr.setRequestHeader(header, headers[header]);
           })
@@ -310,13 +310,13 @@ Reuq.prototype.getUtils = function() {
         .done(function(data, status, jqXHR) {
           var cb = form.attr('rq-cb-done');
           if (cb) {
-            rq.controller.callbacks[cb].apply(rq, [data, status, form]);
+            rq.app.callbacks[cb].apply(rq, [data, status, form]);
           }
         })
         .fail(function(jqXHR, status, error) {
           var cb = form.attr('rq-cb-fail');
           if (cb) {
-            rq.controller.callbacks[cb](error, status, form, jqXHR);
+            rq.app.callbacks[cb](error, status, form, jqXHR);
           }
         });
     }
