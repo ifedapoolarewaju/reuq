@@ -61,7 +61,7 @@ load it on your `index.html`
 
 To initiate the application with Reuq you do:
 `new Reuq(app)` where `app` is an object containing everything Reuq needs to operate
-see ADD DOC LINK HERE
+[see](https://github.com/ifedapoolarewaju/reuq#2-the-app-object)
 
 In your  `app.js` add the following code
 
@@ -88,7 +88,7 @@ But this could as well be a full url like `http://myapi.com/endpoint/` or a rela
 
 `dataKey` is the JSON object key to access the resource data from. Notice that in `videos.json`
 the array of videos is stored under the attribute `data`. To inform Reuq of what key to access data of a resource you add `dataKey`
-see ADD_DOC_URL_HERE for more.
+[see](https://github.com/ifedapoolarewaju/reuq#i-resources).
 
 #### iv. Loading resources to DOM with Reuq Templates
 
@@ -120,10 +120,10 @@ from the url specified and renders it to the DOM via the template it is tied to.
 
 Load the Page from your browser and watch the Magic happen.
 
-See `ADD_DOC_URL_HERE` for more on templates.
+[See](https://github.com/ifedapoolarewaju/reuq#3-reuq-templates) for more on templates.
 
-That's it!!! You are already using reuq, writing less DOM manipulation code. Please view the full doc ADD_DOC_URL_HERE to
-see more Magical things that Reuq is capable of.
+That's it!!! You are already using reuq, writing less DOM manipulation code. Please read on to see more Magical things that
+Reuq is capable of.
 
 ## 2. The App Object
 
@@ -255,7 +255,7 @@ be done with `dynamicProperties`. Here's an example:
 #### iv. eventHandlers
 
 In a situation where you are making use of Reuq Templates and you need to add event handlers to elements on the template.
-You can easily do this with Reuq events see `ADD_DOC_URL_HERE`. Here's an example
+You can easily do this with Reuq events [see](https://github.com/ifedapoolarewaju/reuq#iv-eventhandlers). Here's an example
 
 ```html
 <div rq-tmpl="templateName">
