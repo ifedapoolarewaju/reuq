@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/ifedapoolarewaju/reuq/issues"
   },
-  "homepage": "https://github.com/ifedapoolarewaju/reuq#readme"
+  "homepage": "https://github.com/ifedapoolarewaju/reuq#readme",
+  "devDependencies": {
+    "uglify-js": "^2.7.5"
+  }
 }
