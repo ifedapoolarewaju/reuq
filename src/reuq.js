@@ -31,7 +31,6 @@ function Reuq(app) {
       }
     });
 
-    rq.addEvents();
     // should this be run 1st inetead?
     if (typeof rq.app.onInit === 'function') {
       rq.app.onInit.apply(rq);
@@ -275,8 +274,7 @@ Reuq.prototype.runSubscribers = function(subscribers, data) {
   var rq = this;
   if (subscribers) {
     subscribers.forEach(function(subscriber) {
-      var path = subscriber.split('.');
-      var fn = rq.app[path[0]][path[1]];
+      var fn = rq.app.subscribers[subscriber];
       fn.apply(rq, [data]);
     })
   }
