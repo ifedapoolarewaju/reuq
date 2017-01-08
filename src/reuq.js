@@ -4,6 +4,8 @@ function Reuq(app) {
   var rq = this;
   this.templates = {};
   this.app = app;
+  this.app.resources = app.resources || {};
+  this.app.locals = app.locals || {};
   this.utils = this.getUtils();
 
   this._storeTemplates();
@@ -222,7 +224,8 @@ Reuq.prototype.updateResource = function(resourceName, cb) {
 
 Reuq.prototype.setLocal = function(name, data) {
   var rq = this;
-  var local = this.app.locals[name];
+  // add fallback in case it's a newly dynamically set local
+  var local = this.app.locals[name] = this.app.locals[name] || {};
   local.data = data;
   this.runLocalSubscribers(name, data);
 
