@@ -16,7 +16,10 @@ Requires JQuery
 ## 1. Getting Started
 
 #### i. Installation
-`npm install reuq` or `bower install reuq`
+
+```sh
+$ npm install reuq
+```
 
 #### ii. Load Reuq
 Create a file `index.html`
@@ -625,3 +628,8 @@ the reuq instance is passed as context. Hence can be accessed through `this` wit
   }
 }
 ```
+
+
+## License
+
+[The MIT License](LICENSE).
