@@ -3,7 +3,7 @@ Frontend Javascript framework
 
 Reuq is a frontend Javascript framework built on top of JQuery.
 
-In a world of frontend Javascript where more contemporary/component based frameworks are favonured, some set of
+In a world of frontend Javascript where more contemporary/component based frameworks are favoured, some set of
 developers still prefer to stick with the old jquery style in order to avoid the complexities and difficulties
 of learning a new "not so" JQuery friendly framework.
 
@@ -17,8 +17,6 @@ Requires JQuery
 
 #### i. Installation
 `npm install reuq` or `bower install reuq`
-
-or load from cdn `CDN URL HERE`
 
 #### ii. Load Reuq
 Create a file `index.html`
@@ -35,7 +33,7 @@ On our html file we'll need to load `reuq.js` and its dependencies
     ...
   </body>
   <script type="text/javascript" src="PATH_TO_JQUERY/jquery.min.js" charset="utf-8"></script>
-  <script type="text/javascript" src="PATH_TO_REUQ/reuq.min.js" charset="utf-8"></script>
+  <script type="text/javascript" src="PATH_TO_REUQ/dist/reuq.min.js" charset="utf-8"></script>
   ...
 </html>
 ```
@@ -119,10 +117,9 @@ by doing this, when the page loads, reuq automatically loads the resource
 from the url specified and renders it to the DOM via the template it is tied to.
 
 Load the Page from your browser and watch the Magic happen.
-
 [See](https://github.com/ifedapoolarewaju/reuq#3-reuq-templates) for more on templates.
 
-That's it!!! You are already using reuq, writing less DOM manipulation code. Please read on to see more Magical things that
+That's it! You are already using reuq, writing less DOM manipulation code. Please read on to see more Magical things that
 Reuq is capable of.
 
 ## 2. The App Object
@@ -187,9 +184,13 @@ This is an object within you can store local data that isn't to an external API 
   ...
   locals: {
     person: {
-      name: "Ifedapo Olarewaju"
+      data: {
+        name: "Ifedapo Olarewaju"
+      }
     },
-    cars: ["Lambo", "Mercedes"]
+    cars: {
+      data: ["Lambo", "Mercedes"]
+    }
   }
   ...
 }
@@ -216,6 +217,16 @@ To get local data you do:
 var person = rq.getLocal("person")
 ```
 
+To update local data you do:
+
+```javascript
+rq.updateLocal("person", function(data){
+  data.firstName = "John"
+  // you must return the newly updated data
+  return data
+})
+```
+
 #### iii. dynamicProperties
 
 Because within a Reuq Template you cannot pass expressions like `[[age * 2]]`, you can only access
@@ -235,8 +246,10 @@ be done with `dynamicProperties`. Here's an example:
   ...
   locals: {
     person: {
-      firstName: "Ifedapo",
-      lastName: "Olarewaju"
+      data: {
+        firstName: "Ifedapo",
+        lastName: "Olarewaju"
+      }
     }
   }
 }
@@ -248,28 +261,39 @@ be done with `dynamicProperties`. Here's an example:
     <p>[[firstName]]</p>
 
     <!--  would display "Ifedapo Olarewaju" -->
-    <p>[[fullName]]</p>
+    <p>[[@fullName]]</p>
   </div>
 ```
+
+The dynamic property is identified by prepending it with a `@` symbol.
 
 #### iv. eventHandlers
 
 In a situation where you are making use of Reuq Templates and you need to add event handlers to elements on the template.
-You can easily do this with Reuq events [see](https://github.com/ifedapoolarewaju/reuq#iv-eventhandlers). Here's an example
+You can easily do this with Reuq events. Here's an example
 
 ```html
 <div rq-tmpl="templateName">
   ...
-  <button rq-evt="click showMessage">Show Message</button>
+  <button rq-evt="click showMessage Ifedapo 18">Show Message</button>
 </div>
 ```
+
+the `rq-evt` takes space separated arguments of the following order:
+
+- event type: In our example it is a `click` event.
+- function name: This is the name of the function to call. This is searched from the `eventHandlers` property
+of the reuq `app` object(see javascript code below).
+- [arguments]: This is an infinite but optional set of arguments(separated by space) to pass along to the event handler
+function when called. In our example we passed `Ifedapo` and `18`, please view the javascript code below to see how this is passed
+to the handler.
 
 ```javascript
 {
   ...
   eventHandlers: {
-    function(evt) {
-      alert("Here's your Message")
+    showMessage: function(evt, name, age) {
+      alert("Your name is " + name + " and you are " + age + " years old")
     }
   }
 }
@@ -279,6 +303,42 @@ Where `evt` is an object with 2 attributes
 
 - `event`: An instance of jquery event Object.
 - `target`: A jquery instance of the target element
+
+And `name` and `age` are the arguments `Ifedapo` and `18` respectively.
+
+*Note: As of now, passing arguments do not allow you to pass arguments with a value containing a space character itself e.g you can't pass `Ifedapo Olarewaju` as a single argument. It would be separated to 2 argument.*
+
+#### v. subscribers
+
+Sometimes you want a function or a set of functions to always run whenever your data(locals or resources) is updated. You can do this
+by adding `subscriber` functions to your `app object` and then attaching the subscribers list to the data object. Here's an example.
+
+```javascript
+{
+  ...
+  subscribers: {
+    showCount: function(updatedData) {
+      $('.count').text("(" + updatedData.length + ")")
+    }
+    ...
+  }
+  ...
+  locals: {
+    people: {
+      data: [
+        { firstName: "Ifedapo", lastName: "Olarewaju", male: true, age: 14 },
+        { firstName: "Mike", lastName: "Raymond", male: false, age: 23 },
+      ],
+      subscribers: ['showCount']
+    }
+  }
+}
+```
+
+because `['showCount']` is added to `people` `subscribers` list, whenever `rq.setLocal('people', ...)` or
+`rq.updateLocal('people', ...)` is called, the subscriber `showCount` is executed with the newly updated data passed as an argument.
+
+Please see this [example project](https://github.com/ifedapoolarewaju/reuq/tree/master/examples/people) for a working implementation.
 
 <!-- **fn** -->
 
@@ -339,8 +399,10 @@ var app = {
   ...
   locals: {
     pserson: {
-      firstName: "Ifedapo"
-      ...
+      data: {
+        firstName: "Ifedapo"
+        ...
+      }
     }
   }
 }
@@ -369,9 +431,11 @@ This attribute is used to iterate over array properties of data. e.g
 {
   ...
   person: {
-    firstName: "Ifedapo"
-    phoneNumbers: [{number: "009123455667"}, {number: "008123445678"}]
-    ...
+    data: {
+      firstName: "Ifedapo"
+      phoneNumbers: [{number: "009123455667"}, {number: "008123445678"}]
+      ...
+    }
   }
 }
 ```
@@ -401,8 +465,10 @@ e.g
  ```javascript
 {
   ...
-  cars: [{name: "Lambo"}, {name: "Mercedes"}, {name: "volvo"}]
-    ...
+  cars: {
+    data: [{name: "Lambo"}, {name: "Mercedes"}, {name: "volvo"}]
+  }
+  ...
   }
 }
 ```
@@ -445,8 +511,10 @@ e.g:
   ...
   locals: {
     person: {
-      name: "Jane",
-      male: false
+      data: {
+        name: "Jane",
+        male: false
+      }
     }
   }
 }
@@ -471,8 +539,10 @@ e.g:
   ...
   locals: {
     person: {
-      name: "Jane",
-      male: false
+      data: {
+        name: "Jane",
+        male: false
+      }
     }
   }
 }
@@ -522,8 +592,36 @@ reuqInstance.updateResource("person", function(data){
 })
 ```
 
-<!-- ## 5. Working with locals -->
+## 6. Accessing the Reuq instance
 
-<!-- With the Reuq instance there are a couple of things you can do with local data. -->
+For every function within attributes(i.e `dynamicProperties`, `subscribers`, `eventHandlers` etc) of the reuq `app` object,
+the reuq instance is passed as context. Hence can be accessed through `this` withing each function. e.g
 
-<!-- ## 6. Accessing the Reuq instance -->
+```javascript
+{
+  ...
+  dynamicProperties: {
+    fullName: function(data) {
+      console.log(this) // logs the reuq instance
+      var people = this.getLocal('people')
+      ...
+    }
+  }
+  ...
+  subscribers: {
+    showCount: function(updatedData) {
+      console.log(this) // logs the reuq instance
+      var people = this.getLocal('people')
+      ...
+    }
+  }
+  ...
+  eventHandlers: {
+    showMessage: function(evt, name, age) {
+      console.log(this) // logs the reuq instance
+      var people = this.getLocal('people')
+      ...
+    }
+  }
+}
+```
