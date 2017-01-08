@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>People</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='http://fonts.googleapis.com/css?family=Paytone+One|Righteous' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
+  <body>
+    <header>   
+      <nav>
+        <ul>
+          <li class="logo">
+            <h1 class="logo_text">PeopleStore!</h1>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="media_list">
+      <h1 class="title">People <span class="count"></span></h1>
+      <ul id="video" rq-tmpl='videos' rq-local='people'>
+        <li rq-iter-self>
+          <p>[[@fullName]]</p>
+          <p>[[age]]</p>
+          <p rq-if="male">He's a Man</p>
+          <p rq-if-not="male">She's a Woman</p>
+
+          <p rq-if="@isAdult">Is Allowed to smoke</p>
+          <p rq-if-not="@isAdult">Is not Allowed to smoke</p>
+          <button rq-evt="click removeUser [[@id]]">Remove</button>
+        </li>
+      </ul>
+    </section>
+  </body>
+  <script type="text/javascript" src="js/jquery-1.11.1.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../../src/reuq.js" charset="utf-8"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+</html>
