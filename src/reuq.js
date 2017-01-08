@@ -61,11 +61,51 @@ Reuq.prototype._processTemplate = function(templateName, data) {
     })
   }
 
+  function isDynamicProperty(property) {
+    return property[0] === "@";
+  }
+
+  function getDynamicPropertyValue(property, data) {
+    // remove '@' character
+    var expression = property.slice(1)
+    return rq.app.dynamicProperties[expression].apply(rq, [data]);
+  }
+
+  function getPropertyValue(property, data){
+    return isDynamicProperty(property) ? getDynamicPropertyValue(property, data) : data[property]
+  }
+
   function compile(template, data) {
-    template = template.replace(/\[\[(\w+)\]\]/g, function() {
+    var $template = $(template)
+
+    //process ifs
+    $template.find('[rq-if]').each(function(id, el) {
+      var $el = $(el);
+      var condition = $el.attr('rq-if');
+      $el.removeAttr('rq-if');
+
+      if (!getPropertyValue(condition, data)) {
+        $el.remove();
+      }
+    })
+
+    //process if-nots
+    $template.find('[rq-if-not]').each(function(id, el) {
+      var $el = $(el);
+      var condition = $el.attr('rq-if-not');
+      $el.removeAttr('rq-if-not');
+
+      if (getPropertyValue(condition, data)) {
+        $el.remove();
+      }
+    });
+
+    template = $template.prop('outerHTML');
+
+    template = template.replace(/\[\[(\w+|@\w+)\]\]/g, function() {
       var expression = arguments[1];
       // parse value to string
-      var value = "" + (data[expression] || rq.app.dynamicProperties[expression].apply(rq, [data]));
+      var value = "" + (getPropertyValue(expression, data));
       return sanitize(value);
     });
     return template;
@@ -100,24 +140,6 @@ Reuq.prototype._processTemplate = function(templateName, data) {
       $el.after($compiled);
     });
     $el.remove();
-  });
-
-  //process ifs
-  $template.find('[rq-if]').each(function(id, el) {
-    var $el = $(el);
-    var condition = $el.attr('rq-if');
-    if (!data[condition]) {
-      $el.remove();
-    }
-  })
-
-  //process if-nots
-  $template.find('[rq-if-not]').each(function(id, el) {
-    var $el = $(el);
-    var condition = $el.attr('rq-if-not');
-    if (data[condition]) {
-      $el.remove();
-    }
   });
 
   template = $template.prop('outerHTML');
