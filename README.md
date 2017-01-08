@@ -3,12 +3,8 @@ Frontend Javascript framework
 
 Reuq is a frontend Javascript framework built on top of JQuery.
 
-In a world of frontend Javascript where more contemporary/component based frameworks are favoured, some set of
-developers still prefer to stick with the old jquery style in order to avoid the complexities and difficulties
-of learning a new "not so" JQuery friendly framework.
-
-Reuq.js is for this niche of people but lets them do things more dilligently by taking a lot of responsibilities away
-and making you write less DOM manipulation code while you still stick to JQuery, your first love.
+Reuq.js is for this niche of people prefer to stick with the old jquery style in order to avoid the complexities and difficulties
+of learning a new "not so" JQuery friendly framework. However, Reuq lets you do things more dilligently by taking a lot of responsibilities away from you and making you write less DOM manipulation code while you still stick to JQuery, your first love.
 
 ## Prerequisites
 Requires JQuery

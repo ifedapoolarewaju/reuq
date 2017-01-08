@@ -17,7 +17,8 @@
     "framework",
     "jquery",
     "lightweight",
-    "frontend"
+    "frontend",
+    "templating"
   ],
   "author": "Ifedapo .A. Olarewaju",
   "license": "MIT",
