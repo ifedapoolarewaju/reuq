@@ -26,9 +26,9 @@
       <ul id="video" rq-tmpl='videos' rq-rsrc='videos'>
         <img rq-rsrc-loading rq-src='img/loading_icon.gif'>
         <li rq-iter-self>
-          <iframe rq-src="https://player.vimeo.com/video/[[videoId]]"
+          <iframe rq-src="https://player.vimeo.com/video/[[@videoId]]"
            width='180' height='180' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-          <p title="[[name]]">[[nameTrunc]]</p>
+          <p title="[[name]]">[[@nameTrunc]]</p>
         </li>
       </ul>
     </section>
