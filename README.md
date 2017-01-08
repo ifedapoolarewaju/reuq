@@ -591,7 +591,7 @@ reuqInstance.updateResource("person", function(data){
 })
 ```
 
-## 6. Accessing the Reuq instance
+## 5. Accessing the Reuq instance
 
 For every function within attributes(i.e `dynamicProperties`, `subscribers`, `eventHandlers` etc) of the reuq `app` object,
 the reuq instance is passed as context. Hence can be accessed through `this` withing each function. e.g
