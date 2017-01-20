@@ -1,6 +1,6 @@
 {
   "name": "reuq",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Frontend Javascript framework built on top of JQuery",
   "main": "index.js",
   "directories": {

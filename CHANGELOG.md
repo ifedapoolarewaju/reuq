@@ -1,4 +1,4 @@
-### 0.0.2 / 2017-??-?? ###
+### 0.0.2 / 2017-01-20 ###
 
 * You can now aceess data object attributes and sub-attributes on reuq templates
 * Reuq Event handlers can now be used outside reuq templates
