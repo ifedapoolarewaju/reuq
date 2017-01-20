@@ -35,6 +35,7 @@ function Reuq(app) {
     if (typeof rq.app.onInit === 'function') {
       rq.app.onInit.apply(rq);
     }
+    rq.addEvents(null, true);
   })(this);
 }
 
@@ -71,7 +72,15 @@ Reuq.prototype._processTemplate = function(templateName, data) {
   }
 
   function getPropertyValue(property, data){
-    return isDynamicProperty(property) ? getDynamicPropertyValue(property, data) : data[property]
+    if (isDynamicProperty(property)) {
+      return getDynamicPropertyValue(property, data)
+    } else {
+      var propertyTree = property.split('.');
+
+      return propertyTree.reduce(function(accumulator, current){
+        return accumulator[current]
+      }, data);
+    }
   }
 
   function compile(template, data) {
@@ -101,7 +110,7 @@ Reuq.prototype._processTemplate = function(templateName, data) {
 
     template = $template.prop('outerHTML');
 
-    template = template.replace(/\[\[(\w+|@\w+)\]\]/g, function() {
+    template = template.replace(/\[\[(\w+(\.\w+)*|@\w+)\]\]/g, function() {
       var expression = arguments[1];
       // parse value to string
       var value = "" + (getPropertyValue(expression, data));
@@ -294,10 +303,14 @@ Reuq.prototype._storeTemplates = function() {
   });
 }
 
-Reuq.prototype.addEvents = function($dom) {
+Reuq.prototype.addEvents = function($dom, excludeTemplates) {
   $dom = $dom || $('body');
   var rq = this;
   var evtSelector = '[rq-evt]:not([rq-tmpl] [rq-evt]):not([rq-tmpl][rq-evt])';
+  if (excludeTemplates) {
+    evtSelector += ':not([from-tmpl] [rq-evt]):not([from-tmpl][rq-evt])'
+  }
+
   $dom.find(evtSelector).addBack(evtSelector).each(function(id, el) {
     var $el = $(el);
     var evtConfig = $el.attr('rq-evt').split(' ')
