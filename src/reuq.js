@@ -20,14 +20,17 @@ function Reuq(app) {
     var locals = rq.app.locals || {};
 
     Object.keys(locals).forEach(function(name) {
-      rq.setLocal(name, rq.getLocal(name));
+      var data = rq.getLocal(name);
+      if (typeof data !== 'undefined') {
+        rq.setLocal(name, data);
+      }
     });
     //load all resources set to autoload
     Object.keys(resources).forEach(function(resourceName) {
       // if autoload is not set, autoload it by default
-      if (resources[resourceName]['autoload'] === undefined || resources[resourceName]['autoload']) {
+      if (typeof resources[resourceName].autoload === 'undefined' || resources[resourceName].autoload) {
         rq.getResource(resourceName, true);
-        rq.render(resourceName, null);
+        rq.setResource(resourceName, null, true);
       }
     });
 
@@ -226,13 +229,16 @@ Reuq.prototype.getResource = function(resourceName, force, cb) {
   }
 }
 
-Reuq.prototype.setResource = function(resourceName, data) {
+Reuq.prototype.setResource = function(resourceName, data, withoutSubscribers) {
   var rq = this;
   var resource = this.app.resources[resourceName];
   resource.data = data;
   resource.shouldReload = false;
   resource.updatedAt = new Date();
-  this.runResourceSubscribers(resourceName, data);
+
+  if (!withoutSubscribers) {
+    this.runResourceSubscribers(resourceName, data);
+  }
 
   $('[rq-tmpl][rq-rsrc=' + resourceName + ']:not([manual-render])').each(function(id, el) {
     rq.render($(el).attr('rq-tmpl'), data);
