@@ -202,7 +202,7 @@ Reuq.prototype.getResource = function(resourceName, force, cb) {
   var rq = this;
   var resource = this.app.resources[resourceName];
   if (resource.data && !force && this.cacheIsValid(resourceName)) {
-    cb(resource.data);
+    cb.apply(this, [resource.data]);
   } else {
     resource.loading = true;
 
@@ -222,7 +222,7 @@ Reuq.prototype.getResource = function(resourceName, force, cb) {
         rq.setResource(resourceName, resource.dataKey ? resp[resource.dataKey] : resp);
 
         if (typeof cb === 'function') {
-          cb(resource.data);
+          cb.apply(rq, [resource.data]);
         }
       }
     })
@@ -248,13 +248,12 @@ Reuq.prototype.setResource = function(resourceName, data, withoutSubscribers) {
 Reuq.prototype.runResourceSubscribers = function(resourceName, data) {
   var resource = this.app.resources[resourceName];
   data = data || resource.data;
-  this.runSubscribers(resource.subscribers, data)
+  this.runSubscribers(resource.subscribers, data, resourceName, 'resource')
 }
 
 Reuq.prototype.updateResource = function(resourceName, cb) {
-  var rq = this;
   this.getResource(resourceName, function(data) {
-    rq.setResource(resourceName, cb(data));
+    this.setResource(resourceName, cb.apply(this, [data]));
   });
 }
 
@@ -276,21 +275,21 @@ Reuq.prototype.getLocal = function(name) {
 
 Reuq.prototype.updateLocal = function(name, cb) {
   var data = this.getLocal(name);
-  this.setLocal(name, cb(data));
+  this.setLocal(name, cb.apply(this, [data]));
 }
 
 Reuq.prototype.runLocalSubscribers = function(name, data) {
   var local = this.app.locals[name];
   data = data || local.data;
-  this.runSubscribers(local.subscribers, data);
+  this.runSubscribers(local.subscribers, data, name, 'local');
 }
 
-Reuq.prototype.runSubscribers = function(subscribers, data) {
+Reuq.prototype.runSubscribers = function(subscribers, data, source, type) {
   var rq = this;
   if (subscribers) {
     subscribers.forEach(function(subscriber) {
       var fn = rq.app.subscribers[subscriber];
-      fn.apply(rq, [data]);
+      fn.apply(rq, [data, source, type]);
     })
   }
 }
